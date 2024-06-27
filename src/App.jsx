@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import * as tf from "@tensorflow/tfjs";
 import * as toxicity from "@tensorflow-models/toxicity";
 
 function App() {
@@ -8,24 +9,27 @@ function App() {
   const [result, setResult] = useState([]);
 
   function checkToxicity() {
-    setLoading(true);
-    toxicity
-      .load(0.5)
-      .then((model) => {
-        model
-          .classify([text])
-          .then((predictions) => {
-            console.log(predictions);
-            setResult(predictions);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setLoading(false));
+    tf.ready().then(() => {
+      //Code here
+      setLoading(true);
+      toxicity
+        .load(0.5)
+        .then((model) => {
+          model
+            .classify([text])
+            .then((predictions) => {
+              console.log(predictions);
+              setResult(predictions);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => setLoading(false));
+    });
   }
 
   return (
